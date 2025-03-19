@@ -19,7 +19,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
-export function obtainAuthCode() {
+function obtainAuthCode() {
   const params = new URLSearchParams(window.location.search);
   let code = params.get("code");
 
@@ -112,5 +112,24 @@ async function generateCodeChallenge(codeVerifier) {
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/, "");
+}
+
+export async function checkAuthUser() {
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+  const code = obtainAuthCode();
+
+  if (!code) {
+    return false;
+  } else {
+    // let accessToken = localStorage.getItem("access_token")
+    await obtainNewToken(clientId, code);
+    // localStorage.clear()
+    // const params = new URLSearchParams(window.location.search);
+    // params.delete("code");
+    // const newUrl = `${window.location.pathname}?${params.toString()}`;
+    // window.history.replaceState(null, "", newUrl);
+
+    return true
+  }
 }
 

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { fetchPlaylistsByApi } from '../lib/api';
 import { refreshAccessToken } from '../lib/auth';
+import CloseAside from '../components/icons/CloseAside';
+import World from '../components/icons/World';
+import Sidebar from './Sidebar';
 
 const Playlists = () => {
   const [isAside, setIsAside] = useState(false);
 
-  const handleClick = () => {
+  const handleOpenAside = () => {
     setIsAside((prev) => (!prev))
   }
 
@@ -35,6 +38,7 @@ const Playlists = () => {
 
   return (
     <>
+      <Sidebar />
       <section className={`${!isAside ? 'col-span-2' : ''} grid grid-rows-[auto_1fr] h-full px-10 py-10 overflow-auto`}>
         <h1 className='text-3xl font-bold'>Users's Playlists</h1>
         <div className='mt-6 gap-y-2 gap-x-1 flex flex-row flex-wrap'>
@@ -49,7 +53,11 @@ const Playlists = () => {
               },
               images,
             }) => (
-            <div key={id} className="rounded-2xl p-2 pb-4 hover:bg-[#400073]/10 min-h-0 w-50 transition duration-300 cursor-pointer hover:shadow-[2px_2px_0px_#400073]">
+            <div
+              onClick={handleOpenAside}
+              key={id}
+              className="rounded-2xl p-2 pb-4 hover:bg-[#400073]/10 min-h-0 w-50 transition duration-300 cursor-pointer hover:shadow-[2px_2px_0px_#400073]"
+            >
               <div className='rounded-lg size-46'>
                 <img
                   src={images[0].url}
@@ -73,10 +81,23 @@ const Playlists = () => {
       </section>
       {
         isAside &&
-        <aside className='bg-amber-400 '>
-          <p>b</p>
+        <aside className='bg-[#400073]/7 flex flex-col w-full h-full py-4 px-6 gap-4'>
+          <div className='flex flex-row justify-between w-full'>
+            <World color={"#400073"} />
+            <CloseAside color={"#400073"} />
+          </div>
+          <div className='rounded-lg size-fit border-2'>
+            <img
+              src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da8449d96cb2d95fb48cc299d03b"
+              alt='Playlist Img'
+              className='object-cover object-center w-full h-full rounded-xl'
+            />
+          </div>
+          <div className='flex flex-col'>
+            <h3>babilonia</h3>
+            <h6>erguaitan</h6>
+          </div>
         </aside>
-
       }
     </>
   )
