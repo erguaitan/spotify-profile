@@ -12,7 +12,7 @@ if (!code) {
   redirectToAuthCodeFlow(clientId);
 } else {
   // let accessToken = localStorage.getItem("access_token")
-  const accessToken = await obtainNewToken(clientId, code);
+  const accessToken = obtainNewToken(clientId, code);
   localStorage.clear()
   const params = new URLSearchParams(window.location.search);
   params.delete("code");
