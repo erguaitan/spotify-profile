@@ -37,7 +37,7 @@ const Playlists = () => {
     <>
       <section className={`${!isAside ? 'col-span-2' : ''} grid grid-rows-[auto_1fr] h-full px-10 py-10 overflow-auto`}>
         <h1 className='text-3xl font-bold'>Users's Playlists</h1>
-        <div className='mt-6 grid gap-x-8 gap-y-2 justify-items-center grid-cols-[repeat(auto-fit,minmax(12.5rem,1fr))]'>
+        <div className='mt-6 gap-y-2 gap-x-1 flex flex-row flex-wrap'>
           {playlists.map((
             {
               id,
@@ -49,7 +49,7 @@ const Playlists = () => {
               },
               images,
             }) => (
-            <div key={id} className="rounded-2xl p-2 pb-4 hover:bg-[#400073]/10 h-full w-50 transition duration-300 cursor-pointer hover:shadow-[2px_2px_0px_#400073]">
+            <div key={id} className="rounded-2xl p-2 pb-4 hover:bg-[#400073]/10 min-h-0 w-50 transition duration-300 cursor-pointer hover:shadow-[2px_2px_0px_#400073]">
               <div className='rounded-lg size-46'>
                 <img
                   src={images[0].url}
