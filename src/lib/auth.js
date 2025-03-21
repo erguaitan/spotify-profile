@@ -1,7 +1,10 @@
-import { createCookie, obtainCookie } from "./cookie";
 import { axiosInstanceToken } from "./axios";
+import { useDataStore } from "./useDataStore";
 
-export async function redirectToAuthCodeFlow(clientId) {
+export async function redirectToAuthCodeFlow() {
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+  localStorage.clear();
+
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
@@ -19,34 +22,14 @@ export async function redirectToAuthCodeFlow(clientId) {
   document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
-function obtainAuthCode() {
-  const params = new URLSearchParams(window.location.search);
-  let code = params.get("code");
-
-  if (code) {
-    const params = new URLSearchParams(window.location.search);
-    params.delete("code");
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, "", newUrl);
-
-    // createCookie('code', code);
-    localStorage.setItem('code', code)
-  } else {
-    // code = obtainCookie('code');
-    code = localStorage.getItem('code')
-  }
-
-  return code;
-}
-
-export async function obtainNewToken(client_id, code) {
+export async function obtainNewToken(code) {
   const verifier = localStorage.getItem("verifier");
   if (!verifier) {
-    await redirectToAuthCodeFlow(client_id, code);
+    await redirectToAuthCodeFlow(code);
   }
 
   const params = new URLSearchParams();
-  params.append("client_id", client_id);
+  params.append("client_id", import.meta.env.VITE_CLIENT_ID);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
   params.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
@@ -55,37 +38,31 @@ export async function obtainNewToken(client_id, code) {
   const result = await axiosInstanceToken.post("/api/token", params);
 
   const data = await result.data;
-  // localStorage.setItem("access_token", data.access_token);
-  // localStorage.setItem("refresh_token", data.refresh_token);
-  createCookie("access_token", data.access_token);
-  createCookie("refresh_token", data.refresh_token);
-
-  return data.access_token;
+  localStorage.setItem("access_token", data.access_token);
+  localStorage.setItem("refresh_token", data.refresh_token);
 }
 
 export async function refreshAccessToken() {
   const clientId = import.meta.env.VITE_CLIENT_ID;
-  // const refreshToken = localStorage.getItem("refresh_token");
-  const refreshToken = obtainCookie("refresh_token");
-  if (!refreshToken) {
-    redirectToAuthCodeFlow(clientId);
+  const refresh_token = localStorage.getItem('refresh_token');
+
+  if (!refresh_token) {
+    redirectToAuthCodeFlow();
     return null;
   }
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("grant_type", "refresh_token");
-  params.append("refresh_token", refreshToken);
+  params.append("refresh_token", refresh_token);
 
   const result = await axiosInstanceToken.post("/api/token", params);
 
   const data = await result.data;
-  // localStorage.setItem("access_token", data.access_token);
-  createCookie("access_token", data.access_token);
+  localStorage.setItem("access_token", data.access_token);
 
-  if (data.refreshToken) {
-    // localStorage.setItem("refresh_token", data.refreshToken);
-    createCookie("refresh_token", data.refreshToken);
+  if (data.refresh_token) {
+    localStorage.setItem("refresh_token", data.refresh_token);
   }
 
   return data.access_token;
@@ -100,8 +77,6 @@ function generateCodeVerifier(length) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
 
-  createCookie('verifier', text);
-
   return text;
 }
 
@@ -114,22 +89,24 @@ async function generateCodeChallenge(codeVerifier) {
     .replace(/=+$/, "");
 }
 
-export async function checkAuthUser() {
-  const clientId = import.meta.env.VITE_CLIENT_ID;
-  const code = obtainAuthCode();
+export async function refreshTokenData(code) {
+  try {
+    let token;
+    const { updateData } = useDataStore.getState();
 
-  if (!code) {
-    return false;
-  } else {
-    // let accessToken = localStorage.getItem("access_token")
-    await obtainNewToken(clientId, code);
-    // localStorage.clear()
-    // const params = new URLSearchParams(window.location.search);
-    // params.delete("code");
-    // const newUrl = `${window.location.pathname}?${params.toString()}`;
-    // window.history.replaceState(null, "", newUrl);
+    if (code) {
+      await obtainNewToken(code)
+      token = true
+    } else if (localStorage.getItem("access_token")) {
+      token = true
+    } else {
+      token = false
+    }
 
-    return true
+    await updateData(token);
+
+  } catch (error) {
+    console.error(error);
   }
 }
 

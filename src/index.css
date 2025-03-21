@@ -1,8 +1,10 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
 * {
   scroll-behavior: smooth;
   box-sizing: border-box;
+  font-family: Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic ProN, Meiryo, MS Gothic;
 }
 
 ::selection {

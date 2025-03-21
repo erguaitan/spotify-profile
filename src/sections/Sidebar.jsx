@@ -1,12 +1,16 @@
 import React from 'react'
 import { sideBarOptions } from '../constants/constants'
 import LogOut from '../components/icons/LogOut'
+import { deleteAllCookies } from '../lib/cookie'
+import { useDataStore } from '../lib/useDataStore'
 
-const Sidebar = () => {
-  const currentOption = "playlists"
+const Sidebar = ({currentOption}) => {
+  const {updateData} = useDataStore()
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
+    await updateData(false)
     localStorage.clear();
+    deleteAllCookies();
     window.location.href = "/login"
   }
 
@@ -15,7 +19,7 @@ const Sidebar = () => {
       <ul className='flex flex-col gap-3'>
         {sideBarOptions.map(({ title, href, className }, index) => (
           <a href={href} key={index}>
-            <li className={`${className} ${currentOption === href.slice(1) ? "bg-[#400073]/7" : null}`}>{title}</li>
+            <li className={`${className} ${currentOption === href.slice(1) ? "bg-[#400073]/7 font-semibold" : null}`}>{title}</li>
           </a>
         ))}
       </ul>

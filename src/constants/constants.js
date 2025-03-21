@@ -1,5 +1,7 @@
-const sideBarOptionClass = "text-[#400073] py-3 px-4 hover:bg-[#400073]/15 border-b-2 border-b-[#400073] transition duration-300"
+export const containerSectionClass = "flex flex-col h-full px-10 py-10 overflow-auto gap-6";
+export const headerTextSectionClass = "text-3xl font-bold";
 
+const sideBarOptionClass = "text-[#400073] py-3 px-4 hover:bg-[#400073]/15 border-b-2 border-b-[#400073] transition duration-300"
 export const sideBarOptions = [
   {
     title: "Playlists",
