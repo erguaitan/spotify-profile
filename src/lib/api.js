@@ -1,5 +1,4 @@
 import { axiosInstance } from "./axios";
-import { obtainCookie } from "./cookie";
 
 export async function fetchProfileByApi() {
   const access_token = localStorage.getItem('access_token');

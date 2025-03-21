@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { obtainNewToken, redirectToAuthCodeFlow, refreshAccessToken } from "./auth";
-import { fetchPlaylistInfoByApi, fetchPlaylistsByApi } from "./api";
+import { fetchPlaylistInfoByApi, fetchPlaylistsByApi, fetchProfileByApi } from "./api";
 
 export const useDataStore = create((set, get) => ({
   token: false,
-  isTokenLoading: true,
+  isTokenLoading: false,
+  ownerData: {},
   updateStoreToken: async (code) => {
     try {
       if (window.location.pathname === "/login") {
@@ -33,8 +34,25 @@ export const useDataStore = create((set, get) => ({
     }
   },
   updateDataToken: async (value) => {
-    set({ token: value });
-    set({ isTokenLoading: false });
+    try {
+      if (get().isTokenLoading) return;
+      set({ isDataSectionLoading: true });
+      set({ token: value });
+      if (value) {
+        let data = await fetchProfileByApi();
+        if (data.error) {
+          const newToken = await refreshAccessToken();
+          if (newToken) {
+            data = await fetchProfileByApi();
+          }
+        }
+        set({ ownerData: data })
+      }
+    } catch (error) {
+      set({ token: false });
+    } finally {
+      set({ isTokenLoading: false });
+    }
   },
 
   isDataSectionLoading: false,
@@ -74,7 +92,7 @@ export const useDataStore = create((set, get) => ({
     const currentApplyFilter = get().applyFilterPlaylists;
     if (currentApplyFilter) {
       set((state) => ({
-        dataPlaylistsFiltered: state.dataPlaylists.filter((item) => item.owner.display_name === "erguaitan"), // TODO: take display_name from api
+        dataPlaylistsFiltered: state.dataPlaylists.filter((item) => item.owner.display_name === get().ownerData.display_name),
       }));
     } else {
       set((state) => ({ dataPlaylistsFiltered: state.dataPlaylists }));
