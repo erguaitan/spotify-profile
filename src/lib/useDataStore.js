@@ -65,7 +65,7 @@ export const useDataStore = create((set, get) => ({
       set({ isDataLoading: false });
     }
   },
-  changeFilterPlayLists: () => {
+  changeFilterPlaylists: () => {
     set({ isDataLoading: true });
     set((state) => ({ applyFilterPlaylists: !state.applyFilterPlaylists }));
 

@@ -8,7 +8,7 @@ import PlaylistCard from '../components/PlaylistCard';
 import { containerSectionClass, headerTextSectionClass } from '../constants/constants';
 
 const Playlists = () => {
-  const { isDataLoading, dataFiltered: playlists, updateDataLists, applyFilterPlayLists, changeFilterPlayLists } = useDataStore();
+  const { isDataLoading, dataPlaylistsFiltered: playlists, updateDataLists, applyFilterPlaylists, changeFilterPlaylists } = useDataStore();
   
   const [isAside, setIsAside] = useState(false);
 
@@ -17,8 +17,8 @@ const Playlists = () => {
   }
 
   const handleSetApplyFilter = (value) => {
-    if (value !== applyFilterPlayLists) {
-      changeFilterPlayLists();
+    if (value !== applyFilterPlaylists) {
+      changeFilterPlaylists();
     }
   }
 
@@ -38,11 +38,11 @@ const Playlists = () => {
               <div className='flex flex-row w-full justify-start px-3'>
                 <button
                   onClick={() => handleSetApplyFilter(false)}
-                  className={`px-3 py-1 w-15 ${applyFilterPlayLists ? "bg-[#400073]/30" : "bg-[#400073]"} text-white text-xs border-2 border-r-0 border-[#400073]/50 rounded-l-lg cursor-pointer`}
+                  className={`px-3 py-1 w-15 ${applyFilterPlaylists ? "bg-[#400073]/30" : "bg-[#400073]"} text-white text-xs border-2 border-r-0 border-[#400073]/50 rounded-l-lg cursor-pointer`}
                 >All</button>
                 <button
                   onClick={() => handleSetApplyFilter(true)}
-                  className={`px-3 py-1 w-15 ${applyFilterPlayLists ? "bg-[#400073]" : "bg-[#400073]/30"} text-white text-xs border-2 border-l-0 border-[#400073]/50 rounded-r-lg cursor-pointer`}
+                  className={`px-3 py-1 w-15 ${applyFilterPlaylists ? "bg-[#400073]" : "bg-[#400073]/30"} text-white text-xs border-2 border-l-0 border-[#400073]/50 rounded-r-lg cursor-pointer`}
                 >Own</button>
               </div>
               <div className='gap-y-2 gap-x-1 flex flex-row flex-wrap'>

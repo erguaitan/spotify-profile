@@ -26,4 +26,4 @@ const PlaylistCard = ({href_list, name, name_owner, href_owner, images}) => {
   )
 }
 
-export default PlayListsCard
+export default PlaylistCard
