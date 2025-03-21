@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <header className='col-span-3 row-span-1 bg-[#400073] py-4 px-6 flex flex-row justify-between'>
+    <header className='col-span-3 row-span-1 bg-[#400073] py-3 px-6 flex flex-row justify-between'>
       <a href="https://developer.spotify.com/" target='_blank' rel="noopener noreferrer">
         <img
           src='/full_logo_white_spotify.svg'

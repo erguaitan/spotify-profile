@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { obtainNewToken, redirectToAuthCodeFlow, refreshAccessToken } from "./auth";
-import { fetchPlaylistsByApi } from "./api";
+import { fetchPlaylistInfoByApi, fetchPlaylistsByApi } from "./api";
 
 export const useDataStore = create((set, get) => ({
   token: false,
@@ -32,20 +32,21 @@ export const useDataStore = create((set, get) => ({
       set({ isTokenLoading: false });
     }
   },
-
-  isDataLoading: true,
-  updateData: async (value) => {
+  updateDataToken: async (value) => {
     set({ token: value });
     set({ isTokenLoading: false });
   },
 
+  isDataSectionLoading: false,
+  isDataAsideLoading: false,
+
   dataPlaylists: [],
   dataPlaylistsFiltered: [],
   applyFilterPlaylists: false,
-  updateDataLists: async () => {
+  updateDataPlaylists: async () => {
     try {
-      if (get().isDataLoading) return;
-      set({ isDataLoading: true });
+      if (get().isDataSectionLoading) return;
+      set({ isDataSectionLoading: true });
       let data = await fetchPlaylistsByApi();
       if (data.error) {
         const newToken = await refreshAccessToken();
@@ -59,10 +60,11 @@ export const useDataStore = create((set, get) => ({
       set({ dataPlaylistsFiltered: data.items });
 
     } catch (error) {
-      set({ data: null });
+      set({ dataPlaylists: [] });
+      set({ dataPlaylistsFiltered: [] });
       console.error(error);
     } finally {
-      set({ isDataLoading: false });
+      set({ isDataSectionLoading: false });
     }
   },
   changeFilterPlaylists: () => {
@@ -78,5 +80,68 @@ export const useDataStore = create((set, get) => ({
       set((state) => ({ dataPlaylistsFiltered: state.dataPlaylists }));
     }
     set({ isDataLoading: false });
+  },
+
+  dataPlaylistsAside: {},
+  updateDataPlaylistsAside: async (playlistId) => {
+    try {
+      if (get().isDataAsideLoading) return;
+      set({ isDataAsideLoading: true });
+      let data = await fetchPlaylistInfoByApi(playlistId);
+      if (data.error) {
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          data = await fetchPlaylistInfoByApi(playlistId);
+        } else {
+          redirectToAuthCodeFlow()
+        }
+      }
+      set({ dataPlaylistsAside: data });
+
+    } catch (error) {
+      set({ dataPlaylistsAside: {} });
+      console.error(error);
+    } finally {
+      set({ isDataAsideLoading: false });
+    }
+  },
+  isMorePlaylistsTracksLoading: false,
+  loadMoreTracksPlaylistsAside: async (nextHref) => {
+    set({ isMorePlaylistsTracksLoading: true })
+    const nextHrefSplit = nextHref.split("/");
+    const nextHrefJoin = nextHrefSplit.slice(-2).join("/");
+
+    try {
+      let data = await fetchPlaylistInfoByApi(nextHrefJoin);
+      if (data.error) {
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          data = await fetchPlaylistInfoByApi(nextHrefJoin);
+        } else {
+          redirectToAuthCodeFlow()
+        }
+      }
+
+      set((state) => ({
+        dataPlaylistsAside: {
+          ...state.dataPlaylistsAside,
+          tracks: {
+            ...state.dataPlaylistsAside.tracks,
+            next: data.next,
+            items: [
+              ...state.dataPlaylistsAside.tracks.items,
+              ...data.items,
+            ],
+          },
+        },
+      }));
+
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      set({ isMorePlaylistsTracksLoading: false })
+    }
   }
+
 }))

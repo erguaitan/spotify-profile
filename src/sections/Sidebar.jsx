@@ -5,17 +5,17 @@ import { deleteAllCookies } from '../lib/cookie'
 import { useDataStore } from '../lib/useDataStore'
 
 const Sidebar = ({currentOption}) => {
-  const {updateData} = useDataStore()
+  const {updateDataToken} = useDataStore()
 
   const handleLogOut = async () => {
-    await updateData(false)
+    await updateDataToken(false)
     localStorage.clear();
     deleteAllCookies();
     window.location.href = "/login"
   }
 
   return (
-    <nav className=' bg-[#400073]/7 flex flex-col justify-between p-8'>
+    <nav className=' bg-[#400073]/7 flex flex-col justify-between p-8 overflow-auto'>
       <ul className='flex flex-col gap-3'>
         {sideBarOptions.map(({ title, href, className }, index) => (
           <a href={href} key={index}>
@@ -23,7 +23,7 @@ const Sidebar = ({currentOption}) => {
           </a>
         ))}
       </ul>
-      <button onClick={handleLogOut} className='flex flex-row py-3 px-4 space-x-2 hover:bg-[#400073]/7 transition duration-300 rounded-2xl cursor-pointer'>
+      <button onClick={handleLogOut} className='flex flex-row py-3 px-4 space-x-2 hover:bg-[#400073]/7 transition duration-300 rounded-2xl cursor-pointer mt-8'>
         <LogOut color='#400073' />
         <p className='mx-3 text-[#400073]'>Log Out</p>
       </button>

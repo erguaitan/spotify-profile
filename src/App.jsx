@@ -13,7 +13,7 @@ const App = () => {
   const { isTokenLoading } = useDataStore();
 
   return (
-    <main className="grid grid-rows-[5rem_1fr] grid-cols-[18.75rem_1fr_18.75rem] h-screen" data-theme="light">
+    <main className="grid grid-rows-[4rem_1fr] grid-cols-[18.75rem_1fr_18.75rem] h-screen overflow-hidden" data-theme="light">
       <Header />
       {isTokenLoading ? (
         <div className="col-span-3 flex justify-center items-center">

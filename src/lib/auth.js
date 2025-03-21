@@ -92,7 +92,7 @@ async function generateCodeChallenge(codeVerifier) {
 export async function refreshTokenData(code) {
   try {
     let token;
-    const { updateData } = useDataStore.getState();
+    const { updateDataToken } = useDataStore.getState();
 
     if (code) {
       await obtainNewToken(code)
@@ -103,7 +103,7 @@ export async function refreshTokenData(code) {
       token = false
     }
 
-    await updateData(token);
+    await updateDataToken(token);
 
   } catch (error) {
     console.error(error);
