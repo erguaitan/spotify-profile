@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDataStore } from '../lib/useDataStore';
 import CloseAside from './icons/CloseAside';
 import World from './icons/World';
@@ -13,6 +13,7 @@ const PlaylistsAside = ({ handleOpenAside }) => {
   } = useDataStore();
 
   const [isDescOpen, setIsDescOpen] = useState(false);
+  const loadMorePlaylistTracksRef = useRef(null);
 
   const handleOpenDesc = () => {
     setIsDescOpen((prev) => (!prev))
@@ -21,6 +22,29 @@ const PlaylistsAside = ({ handleOpenAside }) => {
   const handleLoadMoreTracks = (nextHref) => {
     loadMoreTracksPlaylistsAside(nextHref);
   }
+
+  useEffect(() => {
+    if (isMorePlaylistsTracksLoading || dataPlaylistsAside.tracks.next == null) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleLoadMoreTracks()
+        }
+      },
+      { rootMargin: '50px' }
+    );
+
+    if (loadMorePlaylistTracksRef.current) {
+      observer.observe(loadMorePlaylistTracksRef.current);
+    }
+
+    return () => {
+      if (loadMorePlaylistTracksRef.current) {
+        observer.unobserve(loadMorePlaylistTracksRef.current);
+      }
+    }
+  }, [dataPlaylistsAside, isMorePlaylistsTracksLoading])
 
   return (
     <aside className="bg-[#400073]/7 flex flex-col h-full overflow-auto py-4 px-6">
@@ -64,7 +88,7 @@ const PlaylistsAside = ({ handleOpenAside }) => {
           <p className='text-base text-black/80 mt-2 font-semibold line-clamp-2 leading-4'>{`${dataPlaylistsAside.tracks.total} songs`}</p>
         </div>
       </span>
-      <div className='flex flex-col overflow-auto'>
+      <div className='flex flex-col overflow-y-auto overflow-x-hidden'>
         {
           dataPlaylistsAside.tracks.items.map((item, index) => {
             try {
@@ -109,18 +133,16 @@ const PlaylistsAside = ({ handleOpenAside }) => {
           })
         }
         {
-          isMorePlaylistsTracksLoading
-            ?
-            <div className="flex justify-center py-4 w-full min-h-15">
-              <span className="loading loading-spinner text-[#400073] h-full "></span>
+          dataPlaylistsAside.tracks.next !== null && (
+            <div ref={loadMorePlaylistTracksRef} className="flex justify-center py-4 w-full min-h-15">
+              {
+                isMorePlaylistsTracksLoading ?
+                  <span className="loading loading-spinner text-[#400073] h-full "></span> :
+                  null
+              }
+
             </div>
-            :
-            dataPlaylistsAside.tracks.items.length < dataPlaylistsAside.tracks.total &&
-            <div className="flex justify-center py-4 w-full min-h-15">
-              <button onClick={() => handleLoadMoreTracks(dataPlaylistsAside.tracks.next)} className='cursor-pointer rounded-2xl p-1 min-h-full bg-[#400073] text-white/80 text-sm hover:bg-[#400073]/80 transition duration-300'>
-                <ArrowDown size='size-full' strokeWidth='3' />
-              </button>
-            </div>
+          )
         }
       </div>
     </aside>

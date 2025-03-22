@@ -126,8 +126,9 @@ export const useDataStore = create((set, get) => ({
     }
   },
   isMorePlaylistsTracksLoading: false,
-  loadMoreTracksPlaylistsAside: async (nextHref) => {
+  loadMoreTracksPlaylistsAside: async () => {
     set({ isMorePlaylistsTracksLoading: true })
+    const nextHref = get().dataPlaylistsAside.tracks.next
     const nextHrefSplit = nextHref.split("/");
     const nextHrefJoin = nextHrefSplit.slice(-2).join("/");
 
@@ -142,20 +143,21 @@ export const useDataStore = create((set, get) => ({
         }
       }
 
-      set((state) => ({
-        dataPlaylistsAside: {
-          ...state.dataPlaylistsAside,
-          tracks: {
-            ...state.dataPlaylistsAside.tracks,
-            next: data.next,
-            items: [
-              ...state.dataPlaylistsAside.tracks.items,
-              ...data.items,
-            ],
+      if (get().dataPlaylistsAside.tracks.next !== data.next && get().dataPlaylistsAside.tracks.next !== null) {
+        set((state) => ({
+          dataPlaylistsAside: {
+            ...state.dataPlaylistsAside,
+            tracks: {
+              ...state.dataPlaylistsAside.tracks,
+              next: data.next,
+              items: [
+                ...state.dataPlaylistsAside.tracks.items,
+                ...data.items,
+              ],
+            },
           },
-        },
-      }));
-
+        }));
+      }      
 
     } catch (error) {
       console.error(error);

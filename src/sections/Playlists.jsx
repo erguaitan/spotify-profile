@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Sidebar from './Sidebar';
 import SkeletonPlaylistsSection from '../components/skeletons/SkeletonPlaylistsSection';
 import SkeletonPlaylistsAside from '../components/skeletons/SkeletonPlaylistsAside';
@@ -25,6 +25,7 @@ const Playlists = () => {
 
   const [isAside, setIsAside] = useState(false);
   const [playlistSelected, setPlaylistSelected] = useState('');
+  const loadMorePlaylistsRef = useRef(null);
 
   const handleOpenAside = (value, playlistId) => {
     if (value == true) {
@@ -52,6 +53,29 @@ const Playlists = () => {
       updateDataPlaylistsAside(playlistSelected);
     }
   }, [playlistSelected])
+
+  useEffect(() => {
+    if (!dataPlaylistsNextHref || isMorePlaylistsLoading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleLoadMorePlaylists();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    if (loadMorePlaylistsRef.current) {
+      observer.observe(loadMorePlaylistsRef.current);
+    }
+
+    return () => {
+      if (loadMorePlaylistsRef.current) {
+        observer.unobserve(loadMorePlaylistsRef.current);
+      }
+    };
+  }, [dataPlaylistsNextHref, isMorePlaylistsLoading]);
 
   return (
     <>
@@ -102,28 +126,26 @@ const Playlists = () => {
                 })}
                 {
                   dataPlaylistsNextHref && (
-                    isMorePlaylistsLoading ?
-                      <div className="rounded-2xl p-2 pb-4 min-h-0 w-50 transition duration-300">
-                        <div className='rounded-lg size-46'>
-                          <div
-                            className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
-                          >
-                            <span className="loading loading-spinner text-white w-12"></span> :
+                    <div ref={loadMorePlaylistsRef} className="rounded-2xl p-2 pb-4 min-h-0 w-50 transition duration-300">
+                      {
+                        isMorePlaylistsLoading ?
+                          <div className='rounded-lg size-46'>
+                            <div
+                              className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
+                            >
+                              <span className="loading loading-spinner text-white w-12"></span> :
+                            </div>
+                          </div> :
+                          <div className='rounded-lg size-46'>
+                            <div
+                              className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
+                            >
+                              <Plus strokeWidth='3' color='white' size='size-12' />
+                            </div>
                           </div>
-                        </div>
-                      </div> :
-                      <div className="rounded-2xl p-2 pb-4 min-h-0 w-50 transition duration-300">
-                        <div className='rounded-lg size-46'>
-                          <div
-                            onClick={handleLoadMorePlaylists}
-                            className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
-                          >
-                            <Plus strokeWidth='3' color='white' size='size-12' />
-                          </div>
-                        </div>
-                      </div>
+                      }
+                    </div>
                   )
-
                 }
               </div>
             </section>
