@@ -105,7 +105,7 @@ export const useDataStore = create((set, get) => ({
   dataPlaylistsAside: {},
   updateDataPlaylistsAside: async (playlistId) => {
     try {
-      if (get().isDataAsideLoading) return;
+      // if (get().isDataAsideLoading) return;
       set({ isDataAsideLoading: true });
       let data = await fetchPlaylistInfoByApi(playlistId);
       if (data.error) {
