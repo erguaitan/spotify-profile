@@ -3,7 +3,7 @@ import { useDataStore } from '../lib/useDataStore';
 import CloseAside from './icons/CloseAside';
 import World from './icons/World';
 import Lock from './icons/Lock';
-import ArrowDown from './icons/ArrowDown';
+import { formatFollowers } from '../lib/lib';
 
 const PlaylistsAside = ({ handleOpenAside }) => {
   const {
@@ -57,7 +57,7 @@ const PlaylistsAside = ({ handleOpenAside }) => {
               <Lock color={"#400073"} size={"size-6"} />
 
           }
-          <p className='text-sm text-[#400073] font-semibold line-clamp-1'>{`${dataPlaylistsAside.followers.total} followers`}</p>
+          <p className='text-sm text-[#400073] font-semibold line-clamp-1'>{`${formatFollowers(dataPlaylistsAside.followers.total)} followers`}</p>
           <CloseAside color={"#400073"} size={"size-6"} handleOpenAside={handleOpenAside} />
         </div>
         <div className="mt-4 flex flex-col">
