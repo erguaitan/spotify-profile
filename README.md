@@ -6,6 +6,8 @@
 * display all the playlists saved by the user
 * filter the playlists, showing the ones created by the user only
 * display detailed info of each playlist and the songs in it
+* infinite scroll
+* loading screen
 * logout
 
 ## ✒️ design
@@ -24,4 +26,4 @@
 
 
 ## 🚀 demo
-[deploy in render](https://spotify-profile-3n39.onrender.com/login) 
+[deploy in render](https://spotify-profile-3n39.onrender.com) 
