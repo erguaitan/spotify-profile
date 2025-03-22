@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { obtainNewToken, redirectToAuthCodeFlow, refreshAccessToken } from "./auth";
-import { fetchPlaylistInfoByApi, fetchPlaylistsByApi, fetchProfileByApi } from "./api";
+import { fetchEmptyUrlByApi, fetchPlaylistInfoByApi, fetchPlaylistsByApi, fetchProfileByApi } from "./api";
 
 export const useDataStore = create((set, get) => ({
   token: false,
@@ -60,10 +60,11 @@ export const useDataStore = create((set, get) => ({
 
   dataPlaylists: [],
   dataPlaylistsFiltered: [],
+  dataPlaylistsNextHref: null,
   applyFilterPlaylists: false,
   updateDataPlaylists: async () => {
     try {
-      // if (get().isDataSectionLoading) return;
+      if (get().isDataSectionLoading) return;
       set({ isDataSectionLoading: true });
       let data = await fetchPlaylistsByApi();
       if (data.error) {
@@ -76,6 +77,7 @@ export const useDataStore = create((set, get) => ({
       }
       set({ dataPlaylists: data.items });
       set({ dataPlaylistsFiltered: data.items });
+      set({ dataPlaylistsNextHref: data.next });
 
     } catch (error) {
       set({ dataPlaylists: [] });
@@ -159,6 +161,51 @@ export const useDataStore = create((set, get) => ({
       console.error(error);
     } finally {
       set({ isMorePlaylistsTracksLoading: false })
+    }
+  },
+  isMorePlaylistsLoading: false,
+  loadMorePlaylists: async () => {
+    set({ isMorePlaylistsLoading: true })
+    const nextHrefSplit = get().dataPlaylistsNextHref.split("/");
+    const nextHrefJoin = nextHrefSplit.slice(-3).join("/");
+
+    try {
+      let data = await fetchEmptyUrlByApi(nextHrefJoin);
+      if (data.error) {
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          data = await fetchEmptyUrlByApi(nextHrefJoin);
+        } else {
+          redirectToAuthCodeFlow()
+        }
+      }
+
+      set((state) => ({
+        dataPlaylists: [
+          ...state.dataPlaylists,
+          ...data.items
+        ]
+      }));
+      
+      if (get().applyFilterPlaylists) {
+        set((state) => ({
+          dataPlaylistsFiltered: state.dataPlaylists.filter((item) => item.owner.display_name === get().ownerData.display_name),
+        }));
+      } else {
+        set((state) => ({
+          dataPlaylistsFiltered: [
+            ...state.dataPlaylistsFiltered,
+            ...data.items
+          ]
+        }));
+      }
+
+      set({dataPlaylistsNextHref: data.next});
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      set({ isMorePlaylistsLoading: false })
     }
   }
 

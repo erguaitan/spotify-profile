@@ -6,17 +6,21 @@ import { useDataStore } from '../lib/useDataStore';
 import PlaylistCard from '../components/PlaylistCard';
 import { containerSectionClass, headerTextSectionClass } from '../constants/constants';
 import PlaylistsAside from '../components/PlaylistsAside';
+import Plus from '../components/icons/Plus';
 
 const Playlists = () => {
   const {
     isDataSectionLoading,
-    dataPlaylistsFiltered: playlists,
+    dataPlaylistsFiltered,
     updateDataPlaylists,
     applyFilterPlaylists,
     changeFilterPlaylists,
     isDataAsideLoading,
     updateDataPlaylistsAside,
-    dataPlaylistsAside
+    dataPlaylistsAside,
+    dataPlaylistsNextHref,
+    isMorePlaylistsLoading,
+    loadMorePlaylists
   } = useDataStore();
 
   const [isAside, setIsAside] = useState(false);
@@ -35,6 +39,10 @@ const Playlists = () => {
     }
   }
 
+  const handleLoadMorePlaylists = () => {
+    loadMorePlaylists();
+  }
+
   useEffect(() => {
     updateDataPlaylists();
   }, [updateDataPlaylists]);
@@ -49,7 +57,7 @@ const Playlists = () => {
     <>
       <Sidebar currentOption={"playlists"} />
       {
-        isDataSectionLoading || playlists.length == 0 ? <SkeletonPlaylistsSection /> :
+        isDataSectionLoading || dataPlaylistsFiltered.length == 0 ? <SkeletonPlaylistsSection /> :
           <>
             <section className={`${!isAside ? 'col-span-2' : ''} ${containerSectionClass}`}>
               <h1 className={headerTextSectionClass} >Users's Playlists</h1>
@@ -64,7 +72,7 @@ const Playlists = () => {
                 >Own</button>
               </div>
               <div className='gap-y-2 gap-x-1 flex flex-row flex-wrap'>
-                {playlists.map((
+                {dataPlaylistsFiltered.map((
                   {
                     id,
                     external_urls: { spotify: href_list },
@@ -92,6 +100,31 @@ const Playlists = () => {
                     console.error(error);
                   }
                 })}
+                {
+                  dataPlaylistsNextHref && (
+                    isMorePlaylistsLoading ?
+                      <div className="rounded-2xl p-2 pb-4 min-h-0 w-50 transition duration-300">
+                        <div className='rounded-lg size-46'>
+                          <div
+                            className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
+                          >
+                            <span className="loading loading-spinner text-white w-12"></span> :
+                          </div>
+                        </div>
+                      </div> :
+                      <div className="rounded-2xl p-2 pb-4 min-h-0 w-50 transition duration-300">
+                        <div className='rounded-lg size-46'>
+                          <div
+                            onClick={handleLoadMorePlaylists}
+                            className='size-full rounded-xl bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
+                          >
+                            <Plus strokeWidth='3' color='white' size='size-12' />
+                          </div>
+                        </div>
+                      </div>
+                  )
+
+                }
               </div>
             </section>
             {

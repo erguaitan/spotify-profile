@@ -1,5 +1,20 @@
 import { axiosInstance } from "./axios";
 
+export async function fetchEmptyUrlByApi(url) {
+  try {
+    const access_token = localStorage.getItem('access_token');
+    const result = await axiosInstance.get(`/${url}`, {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+
+    return result.data;
+
+  } catch (error) {
+    return {error} 
+  }
+}
+
+
 export async function fetchProfileByApi() {
   const access_token = localStorage.getItem('access_token');
   const result = await axiosInstance.get("/me", {
