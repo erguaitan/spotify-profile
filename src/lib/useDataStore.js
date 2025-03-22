@@ -64,7 +64,7 @@ export const useDataStore = create((set, get) => ({
   applyFilterPlaylists: false,
   updateDataPlaylists: async () => {
     try {
-      if (get().isDataSectionLoading) return;
+      // if (get().isDataSectionLoading) return;
       set({ isDataSectionLoading: true });
       let data = await fetchPlaylistsByApi();
       if (data.error) {
@@ -105,7 +105,7 @@ export const useDataStore = create((set, get) => ({
   dataPlaylistsAside: {},
   updateDataPlaylistsAside: async (playlistId) => {
     try {
-      // if (get().isDataAsideLoading) return;
+      if (get().isDataAsideLoading) return;
       set({ isDataAsideLoading: true });
       let data = await fetchPlaylistInfoByApi(playlistId);
       if (data.error) {
