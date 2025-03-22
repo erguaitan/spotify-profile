@@ -63,7 +63,7 @@ export const useDataStore = create((set, get) => ({
   applyFilterPlaylists: false,
   updateDataPlaylists: async () => {
     try {
-      if (get().isDataSectionLoading) return;
+      // if (get().isDataSectionLoading) return;
       set({ isDataSectionLoading: true });
       let data = await fetchPlaylistsByApi();
       if (data.error) {
