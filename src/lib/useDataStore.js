@@ -55,6 +55,15 @@ export const useDataStore = create((set, get) => ({
     }
   },
 
+  currentResolution: '',
+  changeResolution: (resolution) => {
+    set({currentResolution: resolution});
+  },
+  isSidebarOpen: false,
+  setIsSidebarOpen: (value) => {
+    set({isSidebarOpen: value});
+  },
+
   isDataSectionLoading: false,
   isDataAsideLoading: false,
 

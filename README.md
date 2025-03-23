@@ -11,16 +11,22 @@
 * logout
 
 ## ✒️ design
-#### desktop - 1024px
+#### desktop
 <img width="700px" src='https://res.cloudinary.com/dbgqj70zg/image/upload/v1742678200/701shots_so_pgygci.png' alt='mockup-desktop' />
 
+#### tablet
+<img width="400px" src='https://res.cloudinary.com/dbgqj70zg/image/upload/v1742724107/271shots_so_nigcoi.png' alt='mockup-tablet' />
+
+#### mobile
+<img width="200px" src='https://res.cloudinary.com/dbgqj70zg/image/upload/v1742724119/183shots_so_dbfc7w.png' alt='mockup-mobile' />
 
 ## ⚙ technologies
 * react
+* tailwindcss
 * axios
 * zustand
 * daisyui
-* tailwindcss
+* material ui
 * OAuth 2.0
 * Spotify Web Api 
 

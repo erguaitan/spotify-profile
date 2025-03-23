@@ -5,7 +5,7 @@ import { deleteAllCookies } from '../lib/cookie'
 import { useDataStore } from '../lib/useDataStore'
 
 const Sidebar = ({currentOption}) => {
-  const {updateDataToken} = useDataStore()
+  const {updateDataToken, isSidebarOpen, currentResolution} = useDataStore()
 
   const handleLogOut = async () => {
     await updateDataToken(false)
@@ -15,7 +15,7 @@ const Sidebar = ({currentOption}) => {
   }
 
   return (
-    <nav className=' bg-[#400073]/7 flex flex-col justify-between p-8 overflow-auto'>
+    <nav className={`bg-[#400073]/7 flex flex-col justify-between p-8 overflow-auto ${currentResolution != "desktop" && "col-span-full"} ${!isSidebarOpen && currentResolution != "desktop" && "hidden"}`}>
       <ul className='flex flex-col gap-3'>
         {sideBarOptions.map(({ title, href, className }, index) => (
           <a href={href} key={index}>

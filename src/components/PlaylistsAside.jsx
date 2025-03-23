@@ -88,7 +88,7 @@ const PlaylistsAside = ({ handleOpenAside }) => {
           <p className='text-base text-black/80 mt-2 font-semibold line-clamp-2 leading-4'>{`${dataPlaylistsAside.tracks.total} songs`}</p>
         </div>
       </span>
-      <div className='flex flex-col overflow-y-auto overflow-x-hidden'>
+      <div className='flex flex-col overflow-y-auto overflow-x-hidden min-h-27'>
         {
           dataPlaylistsAside.tracks.items.map((item, index) => {
             try {
