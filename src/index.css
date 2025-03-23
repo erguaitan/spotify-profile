@@ -11,3 +11,21 @@
   background-color: #400073;
   color: white;
 }
+
+@media (max-width: 440px) { /* Móvil */
+  .grid-playlists-container {
+    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  }
+}
+
+@media (min-width: 440px) and (max-width: 768px) { /* Tablet Vertical */
+  .grid-playlists-container {
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  }
+}
+
+@media (min-width: 768px) { /* Escritorio */
+  .grid-playlists-container {
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  }
+}

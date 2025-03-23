@@ -9,11 +9,11 @@ const SkeletonPlaylistsSection = () => {
 
   useEffect(() => {
     if (currentResolution == "mobile") {
-      setWidthCard("max-w-30 p-1 pb-2 rounded-lg")
+      setWidthCard("min-w-20 max-w-30 p-1 pb-2 rounded-lg")
     } else if (currentResolution == "tablet-v") {
-      setWidthCard("max-w-40 p-2 pb-4 rounded-2xl")
+      setWidthCard("min-w-30 max-w-40 p-2 pb-4 rounded-2xl")
     } else {
-      setWidthCard("max-w-50 p-2 pb-4 rounded-2xl")
+      setWidthCard("min-w-40 max-w-50 p-2 pb-4 rounded-2xl")
     }
 
   }, [currentResolution]);
@@ -26,7 +26,7 @@ const SkeletonPlaylistsSection = () => {
           className="skeleton bg-[#400073]/10 px-3 py-1 w-30 max-w-1/1 text-xs h-7"
         ></button>
       </div>
-      <div className={`gap-y-2 gap-x-1 grid grid-cols-[repeat(auto-fit,minmax(${currentResolution == "mobile" ? "5rem" : currentResolution == "tablet-v" ? "7.5rem" : "10rem"},1fr))] w-full justify-center`}>
+      <div className={`grid-playlists-container gap-y-2 gap-x-1 grid w-full justify-center`}>
         {
           skeletonLists.map((_, index) => (
             <div

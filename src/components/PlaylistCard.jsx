@@ -11,17 +11,17 @@ const PlaylistCard = ({ id, href_list, name, name_owner, href_owner, images, han
 
   useEffect(() => {
     if (currentResolution == "mobile") {
-      setWidthCard("max-w-30 p-1 pb-2 rounded-lg")
+      setWidthCard("min-w-20 max-w-30 p-1 pb-2 rounded-lg")
       setTextSizeListName("text-sm leading-4")
       setTextSizeOwnerName("text-xs")
       setTextDecoration("decoration-1")
     } else if (currentResolution == "tablet-v") {
-      setWidthCard("max-w-40 p-2 pb-4 rounded-2xl")
+      setWidthCard("min-w-30 max-w-40 p-2 pb-4 rounded-2xl")
       setTextSizeListName("text-base leading-5")
       setTextSizeOwnerName("text-sm")
       setTextDecoration("decoration-2")
     } else {
-      setWidthCard("max-w-50 p-2 pb-4 rounded-2xl")
+      setWidthCard("min-w-40 max-w-50 p-2 pb-4 rounded-2xl")
       setTextSizeListName("text-lg leading-6")
       setTextSizeOwnerName("text-sm")
       setTextDecoration("decoration-2")

@@ -97,7 +97,7 @@ const Playlists = () => {
                   className={`px-3 py-1 w-15 ${applyFilterPlaylists ? "bg-[#400073]" : "bg-[#400073]/30"} text-white text-xs border-2 border-l-0 border-[#400073]/50 rounded-r-lg cursor-pointer`}
                 >Own</button>
               </div>
-              <div className={`gap-y-2 gap-x-1 grid grid-cols-[repeat(auto-fit,minmax(${currentResolution == "mobile" ? "5rem" : currentResolution == "tablet-v" ? "7.5rem" : "10rem"},1fr))] w-full justify-center`}>
+              <div className={`gap-y-2 gap-x-1 grid grid-playlists-container w-full justify-center`}>
                 {dataPlaylistsFiltered.map((
                   {
                     id,
