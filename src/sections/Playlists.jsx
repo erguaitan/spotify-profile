@@ -128,13 +128,11 @@ const Playlists = () => {
                 })}
                 {
                   dataPlaylistsNextHref && (
-                    <div ref={loadMorePlaylistsRef} className="rounded-2xl p-2 pb-4 min-h-0 w-full transition duration-300">
-                      <div className="rounded-2xl p-2 pb-4 h-full w-full transition duration-300">
+                    <div ref={loadMorePlaylistsRef} className="rounded-2xl p-2 pb-4 min-h-0 w-full">
                         <div
-                          className='rounded-xl h-full p-10 bg-[#400073]/70 hover:bg-[#400073]/80 transition duration-300 cursor-pointer flex items-center justify-center'
+                          className='rounded-xl h-full bg-[#400073]/70 hover:bg-[#400073]/80 flex items-center justify-center'
                         >
                           <span className="loading loading-spinner text-white w-8"></span> :
-                        </div>
                       </div>
                     </div>
                   )
